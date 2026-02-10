@@ -20,6 +20,10 @@ import re
 
 import pandas as pd
 import json
+from google.colab import drive
+
+# Caminho do JSON no Drive
+drive.mount('/content/drive')
 
 discussion_json_path = "./datasets/20230727_195954_discussion_sharings.json"
 hn_sharings_json_path = "./datasets/20230727_195816_hn_sharings.json"
