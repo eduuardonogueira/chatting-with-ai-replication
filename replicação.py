@@ -331,3 +331,54 @@ plt.figure(figsize=(12, 8))
 sns.heatmap(cm, cmap="Blues")
 plt.title("Confusion Matrix – Random Forest")
 plt.show()
+
+import matplotlib.pyplot as plt
+
+# Contagem absoluta
+category_counts = final_dataset["label"].value_counts()
+
+# Percentual
+category_percent = final_dataset["label"].value_counts(normalize=True) * 100
+
+# Ordenar do maior para o menor
+category_percent = category_percent.sort_values(ascending=False)
+
+plt.figure(figsize=(12,6))
+bars = plt.bar(category_percent.index, category_percent.values)
+
+plt.xticks(rotation=75)
+plt.ylabel("Percentage (%)")
+plt.title("Distribution of Conversation Categories (%)")
+
+# Adicionar valores no topo das barras
+for i, v in enumerate(category_percent.values):
+    plt.text(i, v + 0.5, f"{v:.1f}%", ha='center')
+
+plt.show()
+
+from sklearn.metrics import accuracy_score, f1_score
+
+results = []
+
+for name, model in models.items():
+    preds = model.predict(X_test)
+
+    acc = accuracy_score(y_test, preds)
+    f1 = f1_score(y_test, preds, average="macro")
+
+    results.append({
+        "Model": name,
+        "Accuracy": acc,
+        "Macro F1": f1
+    })
+
+results_df = pd.DataFrame(results).sort_values(by="Macro F1", ascending=False)
+
+results_df
+
+results_df.set_index("Model")[["Accuracy","Macro F1"]].plot(kind="bar", figsize=(10,6))
+
+plt.title("Model Performance Comparison")
+plt.ylabel("Score")
+plt.xticks(rotation=45)
+plt.show()
